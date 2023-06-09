@@ -3,21 +3,39 @@ $sender = $transaction["senderaddress"];
 $recipients = $transaction["recipients"];
 $mail = $arguments["mail"];
 $action = $mail->getHeader("X-Bounce-Me");
-// remove any leading or trailing whitespace, extract relevant fields
-$a2 = str_lstrip(str_rstrip($action));
-$pattern = #/^(?P<code>[\d]{3})\s+(?P<enhanced>[\d]\.[\d]\.[\d])?\s*(?P<text>.*)$/;
-$result = pcre_match($pattern, $a2);
+if($action) {
+    // remove any leading or trailing whitespace, extract relevant fields
+    $a2 = str_lstrip(str_rstrip($action));
+    $pattern = #/^(?P<code>[\d]{3})\s*(?P<enhanced>[\d]\.[\d]\.[\d])?\s*(?P<text>.*)$/;
+    $result = pcre_match($pattern, $a2);
 
-// Use named match groups, populating defer options attributes only when we have good data
-$reply_codes = [];
-if(number($result["code"])) {
-    $reply_codes["code"] = number($result["code"]);
+    // Use named match groups, populating defer options attributes only when we have good data
+    $main_code = none;
+    $reply_codes = [];
+    if(number($result["code"])) {
+        $main_code = number($result["code"]);
+        $reply_codes["code"] = $main_code;
+    }
+    if($result["enhanced"]) {
+    $enh = str_split($result["enhanced"], ".");
+    if(length($enh) == 3) {
+        $reply_codes["enhanced"] = $enh;
+    }
+    }
+    $reason = $result["text"];
+    // Look at range of reply code
+    if($main_code and $main_code >= 400 and $main_code <= 499) {
+        Defer($reason, ["reply_codes" => $reply_codes]);
+    } else {
+        if($main_code and $main_code >= 500 and $main_code <= 599) {
+        // Treat every other value as a Reject .. maybe handle exceptions better here
+        Reject($reason, ["reply_codes" => $reply_codes]);
+        } else {
+            // Sink the messages without forwarding them
+            Accept();
+        }
+    }
+} else {
+    // Sink the messages without forwarding them
+    Accept();
 }
-if($result["enhanced"]) {
-  $enh = str_split($result["enhanced"], ".");
-  if(length($enh) == 3) {
-      $reply_codes["enhanced"] = $enh;
-  }
-}
-$reason = $result["text"];
-Defer($reason, ["reply_codes" => $reply_codes]);
