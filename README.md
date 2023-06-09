@@ -3,7 +3,7 @@
 An SMTP sink that you can harmlessly send messages to.
 The `to` and `from` addresses can be anything you wish, as the messages are not relayed to any external destination.
 
-The following examples use `swaks` to show how to get certain responses from the sink. Any other mail system could be used.
+The following examples use `swaks` to show how to get certain responses from the sink. Any other source of email could be used to submit messages to the sink.
 
 ## Default behavior - message accepted (2xx) response
 ```
@@ -13,7 +13,7 @@ You will see a response like
 ```
 250 2.0.0 Ok: queued as dade4e24-03ee-4019-bc9f-ebdb2dde3cf9
 ```
-However the message goes to the "sink" and will not be delivered onwards.
+The message goes to the "sink" and will not be delivered onwards.
 
 ## To get a deferral (4xx) response
 
