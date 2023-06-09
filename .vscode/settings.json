@@ -1,0 +1,10 @@
+{
+  "yaml.customTags": [
+    "!Map mapping",
+    "!Set sequence",
+    "!Regex scalar",
+    "!PrivateKey scalar",
+    "!X509 scalar",
+    "!MailMessage scalar"
+  ]
+}

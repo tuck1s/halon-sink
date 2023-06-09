@@ -1,0 +1,23 @@
+$transactionid = $transaction["id"];
+$sender = $transaction["senderaddress"];
+$recipients = $transaction["recipients"];
+$mail = $arguments["mail"];
+$action = $mail->getHeader("X-Bounce-Me");
+// remove any leading or trailing whitespace, extract relevant fields
+$a2 = str_lstrip(str_rstrip($action));
+$pattern = #/^(?P<code>[\d]{3})\s+(?P<enhanced>[\d]\.[\d]\.[\d])?\s*(?P<text>.*)$/;
+$result = pcre_match($pattern, $a2);
+
+// Use named match groups, populating defer options attributes only when we have good data
+$reply_codes = [];
+if(number($result["code"])) {
+    $reply_codes["code"] = number($result["code"]);
+}
+if($result["enhanced"]) {
+  $enh = str_split($result["enhanced"], ".");
+  if(length($enh) == 3) {
+      $reply_codes["enhanced"] = $enh;
+  }
+}
+$reason = $result["text"];
+Defer($reason, ["reply_codes" => $reply_codes]);
