@@ -11,9 +11,8 @@ swaks --server 127.0.0.1 --from any.from@example.com --to any@example.com
 ```
 You will see a response like
 ```
-250 2.0.0 Ok: queued as dade4e24-03ee-4019-bc9f-ebdb2dde3cf9
+250 2.0.0 Sink quietly accepts your message.
 ```
-The message goes to the "sink" and will not be delivered onwards.
 
 ## To get a deferral (4xx) response
 
@@ -37,6 +36,14 @@ swaks --server 127.0.0.1 --from any.from@example.com --to any@example.com --add-
 It's the same, just specify 5xx values in your header, e.g.
 ```
 swaks --server 127.0.0.1 --from any.from@example.com --to any@example.com --add-header "X-Bounce-Me: 511 5.1.1 Bad email address"
+```
+
+## Troubleshooting
+
+If an `X-Bounce-Me` header is included, but not in a recognized format, you will receive a response:
+
+```
+250 2.0.0 Sink accepts your message, X-Bounce-Me header did not ask for a bounce or deferral.
 ```
 
 ___

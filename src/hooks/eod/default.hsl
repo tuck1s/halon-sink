@@ -31,10 +31,10 @@ if($action) {
         Reject($reason, ["reply_codes" => $reply_codes]);
         } else {
             // Sink the messages without queuing them
-            Accept();
+            Accept( ["reason" => "Sink accepts your message, X-Bounce-Me header did not ask for a bounce or deferral."] );
         }
     }
 } else {
     // Sink the messages without queuing them
-    Accept();
+    Accept( ["reason" => "Sink quietly accepts your message."] );
 }
