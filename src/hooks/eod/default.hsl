@@ -1,15 +1,14 @@
-$transactionid = $transaction["id"];
-$sender = $transaction["senderaddress"];
-$recipients = $transaction["recipients"];
+//$transactionid = $transaction["id"];
+//$sender = $transaction["senderaddress"];
+//$recipients = $transaction["recipients"];
 $mail = $arguments["mail"];
 $action = $mail->getHeader("X-Bounce-Me");
 if($action) {
-    // remove any leading or trailing whitespace, extract relevant fields
-    $a2 = str_lstrip(str_rstrip($action));
+    // extract relevant fields after removing any leading and trailing whitespace
     $pattern = #/^(?P<code>[\d]{3})\s*(?P<enhanced>[\d]\.[\d]\.[\d])?\s*(?P<text>.*)$/;
-    $result = pcre_match($pattern, $a2);
+    $result = pcre_match($pattern, str_lstrip(str_rstrip($action)));
 
-    // Use named match groups, populating defer options attributes only when we have good data
+    // Use named match groups, populating options attributes only when we have good data
     $main_code = none;
     $reply_codes = [];
     if(number($result["code"])) {
@@ -23,19 +22,19 @@ if($action) {
     }
     }
     $reason = $result["text"];
-    // Look at range of reply code
     if($main_code and $main_code >= 400 and $main_code <= 499) {
+        // 4xx will be deferred
         Defer($reason, ["reply_codes" => $reply_codes]);
     } else {
         if($main_code and $main_code >= 500 and $main_code <= 599) {
-        // Treat every other value as a Reject .. maybe handle exceptions better here
+        // 5xx will be rejected
         Reject($reason, ["reply_codes" => $reply_codes]);
         } else {
-            // Sink the messages without forwarding them
+            // Sink the messages without queuing them
             Accept();
         }
     }
 } else {
-    // Sink the messages without forwarding them
+    // Sink the messages without queuing them
     Accept();
 }
