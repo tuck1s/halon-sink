@@ -1,9 +1,9 @@
 # Halon - simple SMTP sink
 
-Send messages to your sink 
+An SMTP sink that you can harmlessly send messages to.
 The `to` and `from` addresses can be anything you wish, as the messages are not relayed to any external destination.
 
-The following examples use `swaks` to show how to get certain responses from the sink. Any other mail system could be used. 
+The following examples use `swaks` to show how to get certain responses from the sink. Any other mail system could be used.
 
 ## Default behavior - message accepted (2xx) response
 ```
