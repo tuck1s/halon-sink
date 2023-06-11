@@ -2,8 +2,8 @@ version: "5.12"
 servers:
   - id: default
     listeners:
+      # accept traffic on all interfaces over ipv4 and ipv6
       - port: 25
-        address: 127.0.0.1
 environment:
   uuid:
     version: 4
@@ -16,3 +16,12 @@ environment:
   umask: "0027"
   rlimit:
     nofile: 70000
+
+# Use a valid key/cert to offer inbound STARTTLS
+pki:
+  private:
+  - id: h4.espops.com
+    privatekey:
+      path: /workspaces/sink/src/files/h4.espops.com/privkey.pem
+    certificate:
+      path: /workspaces/sink/src/files/h4.espops.com/fullchain.pem

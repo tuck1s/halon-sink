@@ -1,0 +1,3 @@
+# Exclude any key files
+*.pem
+dist/**

@@ -6,6 +6,11 @@ servers:
     phases:
       eod:
         hook: default
+    tls:
+      certs: 
+        cert: h4.espops.com
+      protocols: TLSv1.2,TLSv1.3
+      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
 transportgroups:
   - id: default
     retry:
