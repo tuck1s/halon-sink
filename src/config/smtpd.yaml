@@ -17,11 +17,10 @@ environment:
   rlimit:
     nofile: 70000
 
-# Use a valid key/cert to offer inbound STARTTLS
+# Use a valid key/cert to offer inbound STARTTLS.
+# Note the cert part will be loaded in smtpd-app.yaml to permit reloads on cert refresh.
 pki:
   private:
   - id: h4.espops.com
     privatekey:
-      path: /workspaces/sink/src/files/h4.espops.com/privkey.pem
-    certificate:
-      path: /workspaces/sink/src/files/h4.espops.com/fullchain.pem
+      path: /etc/letsencrypt/live/h4.espops.com/privkey.pem

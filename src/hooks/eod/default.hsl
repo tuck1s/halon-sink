@@ -16,10 +16,10 @@ if($action) {
         $reply_codes["code"] = $main_code;
     }
     if($result["enhanced"]) {
-    $enh = str_split($result["enhanced"], ".");
-    if(length($enh) == 3) {
-        $reply_codes["enhanced"] = $enh;
-    }
+        $enh = str_split($result["enhanced"], ".");
+        if(length($enh) == 3) {
+            $reply_codes["enhanced"] = $enh;
+        }
     }
     $reason = $result["text"];
     if($main_code and $main_code >= 400 and $main_code <= 499) {

@@ -4,6 +4,9 @@ servers:
     # FIXME: try to ensure does not fall back to MX delivery for received messages
     transport: sink
     phases:
+      data:
+        # Minor performance optimization - see https://docs.halon.io/manual/config_tuning.html?highlight=multipart#servers-phases-data-multipart
+        multipart: false
       eod:
         hook: default
     tls:
@@ -33,3 +36,10 @@ transportgroups:
 resolver:
   cache:
     size: 10000
+
+# See smtpd.yaml. Note the cert is loaded separately here to permit reloads on cert refresh.
+pki:
+  private:
+  - id: h4.espops.com
+    certificate:
+      path: /etc/letsencrypt/live/h4.espops.com/fullchain.pem
