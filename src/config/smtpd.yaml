@@ -2,8 +2,25 @@ version: "5.12"
 servers:
   - id: default
     listeners:
-      # accept traffic on all interfaces over ipv4 and ipv6
+      # accept traffic on all interfaces (internal and external) - goes to sink!!
       - port: 25
+
+  - id: submission
+    listeners:
+      # For localhost only, queue messages for external delivery
+      - address: 127.0.0.1
+        port: 587
+      - address: ::1
+        port: 587
+
+  - id: queue_to_sink
+    listeners:
+      # For localhost only, queue messages for loopback to sink
+      - address: 127.0.0.1
+        port: 2525
+      - address: ::1
+        port: 2525
+
 environment:
   uuid:
     version: 4

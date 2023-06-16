@@ -1,8 +1,22 @@
 version: "5.12"
 servers:
   - id: default
-    # FIXME: try to ensure does not fall back to MX delivery for received messages
+    # received messages go to the sink
     transport: sink
+    phases:
+      data:
+        # Minor performance optimization - see https://docs.halon.io/manual/config_tuning.html?highlight=multipart#servers-phases-data-multipart
+        multipart: false
+      eod:
+        hook: sink
+    tls:
+      certs: 
+        cert: h4.espops.com
+      protocols: TLSv1.2,TLSv1.3
+      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
+
+  - id: submission
+    transport: mx
     phases:
       data:
         # Minor performance optimization - see https://docs.halon.io/manual/config_tuning.html?highlight=multipart#servers-phases-data-multipart
@@ -14,6 +28,21 @@ servers:
         cert: h4.espops.com
       protocols: TLSv1.2,TLSv1.3
       ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
+
+  - id: queue_to_sink
+    transport: loopback_to_sink
+    phases:
+      data:
+        # Minor performance optimization - see https://docs.halon.io/manual/config_tuning.html?highlight=multipart#servers-phases-data-multipart
+        multipart: false
+      eod:
+        hook: default
+    tls:
+      certs: 
+        cert: h4.espops.com
+      protocols: TLSv1.2,TLSv1.3
+      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
+
 transportgroups:
   - id: default
     retry:
@@ -32,7 +61,18 @@ transportgroups:
         session:
           tls:
             mode: optional
+        connection:
+          sourceip:
+            ipv6: false # Disable for now, as AWS EC2 doesn't provide an outbound IPv6 gateway by default
+
       - id: sink
+        # don't deliver onwards
+
+      - id: loopback_to_sink
+        # here we use IPv6 internally, just because we can (127.0.0.1 would also work)
+        connection:
+          port: 25
+          server: ::1
 resolver:
   cache:
     size: 10000

@@ -1,0 +1,40 @@
+//$transactionid = $transaction["id"];
+//$sender = $transaction["senderaddress"];
+//$recipients = $transaction["recipients"];
+$mail = $arguments["mail"];
+$action = $mail->getHeader("X-Bounce-Me");
+if($action) {
+    // extract relevant fields after removing any leading and trailing whitespace
+    $pattern = #/^(?P<code>[\d]{3})\s*(?P<enhanced>[\d]\.[\d]\.[\d])?\s*(?P<text>.*)$/;
+    $result = pcre_match($pattern, str_lstrip(str_rstrip($action)));
+
+    // Use named match groups, populating options attributes only when we have good data
+    $main_code = none;
+    $reply_codes = [];
+    if(number($result["code"])) {
+        $main_code = number($result["code"]);
+        $reply_codes["code"] = $main_code;
+    }
+    if($result["enhanced"]) {
+        $enh = str_split($result["enhanced"], ".");
+        if(length($enh) == 3) {
+            $reply_codes["enhanced"] = $enh;
+        }
+    }
+    $reason = $result["text"];
+    if($main_code and $main_code >= 400 and $main_code <= 499) {
+        // 4xx will be deferred
+        Defer($reason, ["reply_codes" => $reply_codes]);
+    } else {
+        if($main_code and $main_code >= 500 and $main_code <= 599) {
+        // 5xx will be rejected
+        Reject($reason, ["reply_codes" => $reply_codes]);
+        } else {
+            // Sink the messages without queuing them
+            Accept( ["reason" => "Sink accepts your message, X-Bounce-Me header did not ask for a bounce or deferral."] );
+        }
+    }
+} else {
+    // Sink the messages without queuing them
+    Accept( ["reason" => "Sink quietly accepts your message."] );
+}
