@@ -4,6 +4,22 @@
 $mail = $arguments["mail"];
 $action = $mail->getHeader("X-Bounce-Me");
 if($action) {
+    // Check if percentage (probability) of action is present
+    $percent_hdr = $mail->getHeader("X-Bounce-Percentage");
+    echo $percent_hdr;
+    if ($percent_hdr) {
+        $percent_str = str_lstrip(str_rstrip($percent_hdr));
+        // need to specifically check for zero as a valid (but non-truthy) input value
+        if(number($percent_str) or $percent_str == "0") {
+            $percent = number($percent_str);
+            $rnd = random_number(0, 100);
+            if($percent <= $rnd) {
+                // Sink the messages without queuing them
+                Accept( ["reason" => "sink accepts your message due to X-Bounce-Percentage: " . $percent_str ] );
+            }
+        }
+    }    
+
     // extract relevant fields after removing any leading and trailing whitespace
     $pattern = #/^(?P<code>[\d]{3})\s*(?P<enhanced>[\d]\.[\d]\.[\d])?\s*(?P<text>.*)$/;
     $result = pcre_match($pattern, str_lstrip(str_rstrip($action)));
