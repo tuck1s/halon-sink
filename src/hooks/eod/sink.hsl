@@ -6,7 +6,6 @@ $action = $mail->getHeader("X-Bounce-Me");
 if($action) {
     // Check if percentage (probability) of action is present
     $percent_hdr = $mail->getHeader("X-Bounce-Percentage");
-    echo $percent_hdr;
     if ($percent_hdr) {
         $percent_str = str_lstrip(str_rstrip($percent_hdr));
         // need to specifically check for zero as a valid (but non-truthy) input value
