@@ -71,7 +71,7 @@ transportgroups:
       - id: loopback_to_sink
         # here we use IPv6 internally, just because we can (127.0.0.1 would also work)
         connection:
-          port: 25
+          port: 2525
           server: ::1
 resolver:
   cache:
