@@ -20,7 +20,7 @@ if($action) {
     }
 
     // extract relevant fields after removing any leading and trailing whitespace
-    $pattern = #/^(?P<code>[\d]{3})\s*(?P<enhanced>[\d]\.[\d]\.[\d])?\s*(?P<text>.*)$/;
+    $pattern = #/^(?P<code>[\d]{3})\s?(?P<enhanced>\d+\.\d+\.\d+)?\s?(?P<text>.*)$/;
     $result = pcre_match($pattern, str_lstrip(str_rstrip($action)));
 
     // Use named match groups, populating options attributes only when we have good data

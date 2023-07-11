@@ -18,11 +18,8 @@ servers:
 
   - id: queue_to_sink
     listeners:
-      # For localhost only, queue messages through the MTA for loopback to sink
-      - address: 127.0.0.1
-        port: 25
-      #- address: ::1
-      #  port: 25
+      # External + internal listener. Queue messages through the MTA for loopback to sink
+    - port: 25
 
 environment:
   uuid:
@@ -36,7 +33,11 @@ environment:
   umask: "0027"
   rlimit:
     nofile: 70000
-
+  syslog:
+    # Disable huge logfiles
+    # https://docs.halon.io/manual/config_startup.html#confval-environment.syslog.mask
+    mask: 191
+    
 # Use a valid key/cert to offer inbound STARTTLS.
 # Note the cert part will be loaded in smtpd-app.yaml to permit reloads on cert refresh.
 #pki:
