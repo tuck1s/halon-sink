@@ -5,16 +5,16 @@ servers:
       # For localhost only, this is the sink
       - address: 127.0.0.1
         port: 2525
-      #- address: ::1
-      #  port: 587
+      - address: ::1
+        port: 2525
 
   - id: submission
     listeners:
       # For localhost only, queue messages for external delivery
       - address: 127.0.0.1
         port: 587
-      #- address: ::1
-      #  port: 587
+      - address: ::1
+        port: 587
 
   - id: queue_to_sink
     listeners:
