@@ -17,7 +17,7 @@ if($action) {
                 Accept( ["reason" => "sink accepts your message due to X-Bounce-Percentage: " . $percent_str ] );
             }
         }
-    }    
+    }
 
     // extract relevant fields after removing any leading and trailing whitespace
     $pattern = #/^(?P<code>[\d]{3})\s*(?P<enhanced>[\d]\.[\d]\.[\d])?\s*(?P<text>.*)$/;
