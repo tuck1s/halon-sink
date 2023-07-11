@@ -4,7 +4,7 @@ servers:
     listeners:
       # For localhost only, this is the sink
       - address: 127.0.0.1
-      - port: 2525
+        port: 2525
       #- address: ::1
       #  port: 587
 
