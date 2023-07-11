@@ -9,11 +9,11 @@ servers:
         multipart: false
       eod:
         hook: sink
-    tls:
-      certs: 
-        cert: h4.espops.com
-      protocols: TLSv1.2,TLSv1.3
-      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
+#    tls:
+#      certs: 
+#        cert: h4.espops.com
+#      protocols: TLSv1.2,TLSv1.3
+#      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
 
   - id: submission
     transport: mx
@@ -23,11 +23,11 @@ servers:
         multipart: false
       eod:
         hook: default
-    tls:
-      certs: 
-        cert: h4.espops.com
-      protocols: TLSv1.2,TLSv1.3
-      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
+#    tls:
+#      certs: 
+#        cert: h4.espops.com
+#      protocols: TLSv1.2,TLSv1.3
+#      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
 
   - id: queue_to_sink
     transport: loopback_to_sink
@@ -37,11 +37,11 @@ servers:
         multipart: false
       eod:
         hook: default
-    tls:
-      certs: 
-        cert: h4.espops.com
-      protocols: TLSv1.2,TLSv1.3
-      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
+#    tls:
+#      certs: 
+#        cert: h4.espops.com
+#      protocols: TLSv1.2,TLSv1.3
+#      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
 
 transportgroups:
   - id: default
@@ -78,8 +78,13 @@ resolver:
     size: 10000
 
 # See smtpd.yaml. Note the cert is loaded separately here to permit reloads on cert refresh.
-pki:
-  private:
-  - id: h4.espops.com
-    certificate:
-      path: /etc/letsencrypt/live/h4.espops.com/fullchain.pem
+#pki:
+#  private:
+#  - id: h4.espops.com
+#    certificate:
+#      path: /etc/letsencrypt/live/h4.espops.com/fullchain.pem
+#pki:
+#  private:
+#  - id: h4.espops.com
+#    certificate:
+#      path: /etc/letsencrypt/live/h4.espops.com/fullchain.pem

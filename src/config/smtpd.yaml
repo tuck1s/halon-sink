@@ -2,24 +2,27 @@ version: "5.12"
 servers:
   - id: default
     listeners:
-      # accept traffic on all interfaces (internal and external) - goes to sink!!
-      - port: 25
+      # For localhost only, this is the sink
+      - address: 127.0.0.1
+      - port: 2525
+      #- address: ::1
+      #  port: 587
 
   - id: submission
     listeners:
       # For localhost only, queue messages for external delivery
       - address: 127.0.0.1
         port: 587
-      - address: ::1
-        port: 587
+      #- address: ::1
+      #  port: 587
 
   - id: queue_to_sink
     listeners:
-      # For localhost only, queue messages for loopback to sink
+      # For localhost only, queue messages through the MTA for loopback to sink
       - address: 127.0.0.1
-        port: 2525
-      - address: ::1
-        port: 2525
+        port: 25
+      #- address: ::1
+      #  port: 25
 
 environment:
   uuid:
@@ -36,8 +39,8 @@ environment:
 
 # Use a valid key/cert to offer inbound STARTTLS.
 # Note the cert part will be loaded in smtpd-app.yaml to permit reloads on cert refresh.
-pki:
-  private:
-  - id: h4.espops.com
-    privatekey:
-      path: /etc/letsencrypt/live/h4.espops.com/privkey.pem
+#pki:
+  #private:
+  #- id: h4.espops.com
+  #  privatekey:
+  #    path: /etc/letsencrypt/live/h4.espops.com/privkey.pem
