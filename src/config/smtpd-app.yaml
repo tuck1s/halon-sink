@@ -54,8 +54,9 @@ transportgroups:
           notify: true
         - interval: 7200
         - interval: 10800
-    dsn:
-      transport: mx
+    # Disable DSNs as we do not want backscatter spam coming back from MTA due to bounces from the sink.
+    # dsn:
+    #   transport: mx
     transports:
       - id: mx
         session:
