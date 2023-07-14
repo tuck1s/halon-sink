@@ -9,11 +9,6 @@ servers:
         multipart: false
       eod:
         hook: sink
-#    tls:
-#      certs: 
-#        cert: h4.espops.com
-#      protocols: TLSv1.2,TLSv1.3
-#      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
 
   - id: submission
     transport: mx
@@ -23,11 +18,6 @@ servers:
         multipart: false
       eod:
         hook: default
-#    tls:
-#      certs: 
-#        cert: h4.espops.com
-#      protocols: TLSv1.2,TLSv1.3
-#      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
 
   - id: queue_to_sink
     transport: loopback_to_sink
@@ -37,11 +27,6 @@ servers:
         multipart: false
       eod:
         hook: default
-#    tls:
-#      certs: 
-#        cert: h4.espops.com
-#      protocols: TLSv1.2,TLSv1.3
-#      ciphers: aNULL:-aNULL:HIGH:MEDIUM:+RC4:@STRENGTH
 
 transportgroups:
   - id: default
@@ -77,12 +62,53 @@ resolver:
   cache:
     size: 10000
 
+queues:
+  pooling:
+    size: 1000
+    policy: remotemx
+  grouping:
+    default: recipientdomain
+    groupings:
+      - id: google
+        #remotemx:
+        #  - "*.google.com"
+        #  - "*.googlemail.com"
+        #  - "*.smtp.goog"
+        recipientdomain:
+          - google.com
+      - id: microsoft
+        recipientdomain:
+          - hotmail.com
+          - msn.com
+          - hotmail.co.jp
+          - live.com
+          - outlook.com
+          - hotmail.co.uk
+          - hotmail.fr
+          - live.jp
+          - hotmail.de
+          - live.co.uk
+          - hotmail.es
+          - live.fr
+          - live.in
+        #remotemx:
+        #  - "*.protection.outlook.com"
+      - id: yahoo
+        recipientdomain:
+          - yahoo.com.br
+          - yahoo.com
+          - yahoo.co.in
+          - yahoo.in
+          - yahoo.ca
+          - yahoo.co.uk
+          - yahoo.es
+          - yahoo.de
+          - yahoo.it
+          - yahoo.gr
+          - yahoo.ie
+        #remotemx:
+        #  - "*.yahoodns.net"
 # See smtpd.yaml. Note the cert is loaded separately here to permit reloads on cert refresh.
-#pki:
-#  private:
-#  - id: h4.espops.com
-#    certificate:
-#      path: /etc/letsencrypt/live/h4.espops.com/fullchain.pem
 #pki:
 #  private:
 #  - id: h4.espops.com

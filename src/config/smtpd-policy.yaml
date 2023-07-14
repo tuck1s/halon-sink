@@ -1,0 +1,33 @@
+version: "5.12"
+policies:
+  - fields:
+    - jobid
+  - fields:
+    - localip
+  - fields:
+      - localip
+      - grouping
+    conditions:
+      - if:
+          grouping:
+            - "&google"
+            - "&microsoft"
+            - "&yahoo"
+        then:
+          concurrency: 20
+          rate: 999999/1 # unlimited
+          properties:
+            backoff-concurrency: 2
+            backoff-rate: 100/60
+            backoff-ttl: 3600
+            backoff-disableable: true
+            backoff-suspendable: true
+    default:
+      concurrency: 2
+      rate: 30/60
+      properties:
+        backoff-concurrency: 1
+        backoff-rate: 1/60
+        backoff-ttl: 3600
+        backoff-disableable: false
+        backoff-suspendable: false
