@@ -39,8 +39,9 @@ transportgroups:
           notify: true
         - interval: 7200
         - interval: 10800
-    dsn:
-      transport: mx
+    # Disable DSNs as we do not want backscatter spam coming back from MTA due to bounces from the sink.
+    # dsn:
+    #   transport: mx
     transports:
       - id: mx
         session:
@@ -56,7 +57,7 @@ transportgroups:
       - id: loopback_to_sink
         # here we use IPv6 internally, just because we can (127.0.0.1 would also work)
         connection:
-          port: 25
+          port: 2525
           server: ::1
 resolver:
   cache:

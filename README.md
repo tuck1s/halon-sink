@@ -5,9 +5,16 @@ The `to` and `from` addresses can be anything you wish, as the messages are not 
 
 The following examples use `swaks` to show how to get certain responses from the sink. Any other source of email could be used to submit messages to the sink.
 
+|Port|Purpose|
+|--|--|
+|25|queue_to_sink listener. Passes messages through the MTA to show stats, delivering to the sink. Always accepts messages.|
+|587|Email submission that will be delivered to real MXs|
+|2525|Direct to the sink - gives variety of responses|
+
+
 ## Default behavior - message accepted (2xx) response
 ```
-swaks --server 127.0.0.1 --from any.from@example.com --to any@example.com
+swaks --server 127.0.0.1:2525 --from any.from@example.com --to any@example.com
 ```
 You will see a response like
 ```
@@ -19,23 +26,23 @@ You will see a response like
 Add an `X-Bounce-Me` header specifying the type of response you want to get back.
 
 ```
-swaks --server 127.0.0.1 --from any.from@example.com --to any@example.com --add-header "X-Bounce-Me: 499 4.2.1 The user you are trying to contact is receiving mail at a rate that prevents additional messages from being delivered."
+swaks --server 127.0.0.1:2525 --from any.from@example.com --to any@example.com --add-header "X-Bounce-Me: 499 4.2.1 The user you are trying to contact is receiving mail at a rate that prevents additional messages from being delivered."
 ```
 You can skip the enhanced code `x.y.z`, you will receive a standard `4.3.2` enhanced code in the server response.
 
 ```
-swaks --server 127.0.0.1 --from any.from@example.com --to any@example.com --add-header "X-Bounce-Me: 432 This is brief text"
+swaks --server 127.0.0.1:2525 --from any.from@example.com --to any@example.com --add-header "X-Bounce-Me: 432 This is brief text"
 ```
 
 You can omit the descriptive text. You will receive a standard response text.
 ```
-swaks --server 127.0.0.1 --from any.from@example.com --to any@example.com --add-header "X-Bounce-Me: 499"
+swaks --server 127.0.0.1:2525 --from any.from@example.com --to any@example.com --add-header "X-Bounce-Me: 499"
 ```
 ## To get a rejection (5xx) response
 
 It's the same, just specify 5xx values in your header, e.g.
 ```
-swaks --server 127.0.0.1 --from any.from@example.com --to any@example.com --add-header "X-Bounce-Me: 511 5.1.1 Bad email address"
+swaks --server 127.0.0.1:2525 --from any.from@example.com --to any@example.com --add-header "X-Bounce-Me: 511 5.1.1 Bad email address"
 ```
 
 ## Troubleshooting
